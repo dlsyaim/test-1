@@ -1,2 +1,2 @@
 # test
-Move the logs to a time-named folder
+Move logs to a time-named folder.
