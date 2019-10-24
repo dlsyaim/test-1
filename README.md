@@ -1,2 +1,2 @@
 # test
-This is a testing project
+Move the logs to a time-named folder
