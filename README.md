@@ -1,2 +1,3 @@
 # test
-Move logs to a time-named folder.
+log_move.py: Move logs to a time-named folder.
+random_lottery: Generate random lottery numbers.
