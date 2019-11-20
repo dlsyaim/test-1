@@ -1,3 +1,8 @@
+# 用于随机生成双色球和大乐透号码
+# 运行环境：win10 
+# 版本：python 3.6
+
+
 # 导入tkinter和随机模块
 from tkinter import *
 import random
