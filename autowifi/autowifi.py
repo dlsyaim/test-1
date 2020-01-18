@@ -38,7 +38,7 @@ data={
 # cycle func.
 def cyc():
     while (True):
-        result = os.system(u"ping 1.2.4.8 -c 1 -W 5")
+        result = os.system(u"ping 1.2.4.8 -c 3 -W 5")
         if result != 0:
             try:
                 os.system(u"iw wlan0 disconnect")
