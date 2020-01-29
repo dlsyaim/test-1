@@ -1,4 +1,4 @@
-/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # requests模拟发起http，time用于打印时间
