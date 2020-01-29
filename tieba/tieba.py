@@ -1,3 +1,6 @@
+/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 # requests模拟发起http，time用于打印时间
 import requests
 import time
