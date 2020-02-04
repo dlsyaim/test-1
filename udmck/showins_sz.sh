@@ -108,13 +108,13 @@ echo ""
 function scrib_data_check(){
 echo -e "\033[36mSubscription_data:\033[0m "
 
-curl -s -X GET "http://$UDM_ADDR:81/nudm-sdm/v1/imsi-$IMSI/am-data" > am-data.txt 
+curl -m 5 -s -X GET "http://$UDM_ADDR:81/nudm-sdm/v1/imsi-$IMSI/am-data" > am-data.txt 
 n_ok am-data
-curl -s -X GET "http://$UDM_ADDR:81/nudm-sdm/v1/imsi-$IMSI/sm-data" > sm-data.txt
+curl -m 5 -s -X GET "http://$UDM_ADDR:81/nudm-sdm/v1/imsi-$IMSI/sm-data" > sm-data.txt
 n_ok sm-data
-curl -s -X GET "http://$UDM_ADDR:81/nudm-sdm/v1/imsi-$IMSI/nssai" > nssai.txt
+curl -m 5 -s -X GET "http://$UDM_ADDR:81/nudm-sdm/v1/imsi-$IMSI/nssai" > nssai.txt
 n_ok nssai
-curl -s -X GET "http://$UDM_ADDR:81/nudm-sdm/v1/imsi-$IMSI/smf-select-data" > smf-select-data.txt
+curl -m 5 -s -X GET "http://$UDM_ADDR:81/nudm-sdm/v1/imsi-$IMSI/smf-select-data" > smf-select-data.txt
 n_ok smf-select-data
 echo ""
 }
@@ -131,7 +131,7 @@ fi
 #Define func auth data check
 function auth_check(){
 SUCI="suci-0-${IMSI:0:3}-${IMSI:3:2}-0000-0-0-${IMSI:5}"
-curl -s -X POST "http://$UDM_ADDR/nausf-auth/v1/ue-authentications" -H "accept: application/3gppHal+json" -H "Content-Type: application/json" -d "{ \"supiOrSuci\": \"$SUCI\", \"servingNetworkName\": \"5G:mnc008.mcc460.3gppnetwork.org\"}" > auth.txt
+curl -m 5 -s -X POST "http://$UDM_ADDR/nausf-auth/v1/ue-authentications" -H "accept: application/3gppHal+json" -H "Content-Type: application/json" -d "{ \"supiOrSuci\": \"$SUCI\", \"servingNetworkName\": \"5G:mnc008.mcc460.3gppnetwork.org\"}" > auth.txt
 cat auth.txt | grep -i 5G_AKA > /dev/null
 n_ok "Authen data"
 echo ""
