@@ -10,3 +10,5 @@ remote: FRP configuration sample.
 tieba: Baidu Tieba automatic sign.
 
 fishc: Fishc BBS automatic sign.
+
+udmck: UDM check script.
