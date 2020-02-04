@@ -18,7 +18,7 @@ SMF_C=0
 UDR_C=0
 
 echo ""
-echo "                                       Show nrf $NRF_ADDR's instances."
+echo "                                       Show all instances of nrf $NRF_ADDR"
 echo ""
 echo -e "\033[36mUUID\t\t\t\t\t\tNODE_TYPE\tSTATUS\t\t\tADDRESS\t\t\tNODE\033[0m"
 
