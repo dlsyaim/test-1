@@ -3,7 +3,7 @@ log_move.py: Move logs to a time-named folder.
 
 random_lottery: Generate random lottery numbers.
 
-autowifi: Automatic login authentication website login.
+autowifi: Automatic login and authentication cisco wifi website.
 
 remote: FRP configuration sample.
 
