@@ -12,3 +12,5 @@ tieba: Baidu Tieba automatic sign.
 fishc: Fishc BBS automatic sign.
 
 udmck: UDM check script.
+
+simpledictionary: Simple dictionary.
