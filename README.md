@@ -5,12 +5,9 @@ random_lottery: Generate random lottery numbers.
 
 autowifi: Automatic login and authentication cisco wifi website.
 
-remote: FRP configuration sample.
-
-tieba: Baidu Tieba automatic sign.
-
-fishc: Fishc BBS automatic sign.
-
-udmck: UDM check script.
-
-simpledictionary: Simple dictionary.
+spider
+├── cloudpics: Download the satellite image to convert to GIF.
+├── fishc: Fishc BBS automatic sign.
+├── simpledictionary: Simple dictionary.
+├── tieba: Simple dictionary.
+└── udmck: Simple dictionary.
