@@ -1,18 +1,17 @@
-# test
-log_move.py: Move logs to a time-named folder.
+# Test project
 
-random_lottery: Generate random lottery numbers.
+# 1.Log_move.py
+Move logs to a time-named folder.
 
-autowifi: Automatic login and authentication cisco wifi website.
+# 2.Random_lottery
+Generate random lottery numbers.
 
-spider
+# 3.Autowifi
+Automatic login and authentication cisco wifi website.
 
- 1)cloudpics: Download the satellite image to convert to GIF.
-
- 2)fishc: Fishc BBS automatic sign.
-
- 3)simpledictionary: Simple dictionary.
-
- 4)tieba: Simple dictionary.
-
- 5)udmck: Simple dictionary.
+# 4.Spider: HTTP based program
+1. Cloudpics: Download the satellite image to convert to GIF.  
+2. Fishc: Fishc BBS automatic sign.  
+3. Simpledictionary: Simple dictionary.  
+4. Tieba: Baidu tieba BBS automatic sign.  
+5. Udmck: UDM nodes and date check.  
