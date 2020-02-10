@@ -1,15 +1,22 @@
 #!/bin/bash
 
-cd /tmp
+
+#Check work directory and change into
+if [ ! -d /tmp/showins  ]; then
+   mkdir -p /tmp/showins
+fi
+cd /tmp/showins
+
 
 #Define func nf info check
 function nf_check(){
 
 echo > node.txt
 echo > temp.txt
-echo > set_region.txt
+echo > amf_id.txt
 #echo > udm_addr.txt
 
+# NF count
 AMF_C=0
 SMF_C=0
 #UDM_C=0
@@ -17,6 +24,7 @@ SMF_C=0
 #PCF_C=0
 UDR_C=0
 
+# NF show
 echo ""
 echo "                                       Show all instances of nrf $NRF_ADDR"
 echo ""
@@ -56,15 +64,9 @@ do
     
     case $TYPE in
         AMF)
-            SET=$(cat temp.txt | grep -i set | cut -d':' -f 2)
-            SET=${SET//\"/}
-            SET=${SET// /}
-            SET=${SET//,/}
-            REGION=$(cat temp.txt | grep -i region | cut -d':' -f 2)
-            REGION=${REGION//\"/}
-            REGION=${REGION// /}
-            REGION=${REGION//,/}
-            echo "$SET $REGION $ADDRESS" >> set_region.txt
+            AMFID=$(cat temp.txt | grep amfId |head -1| cut -d':' -f 2)
+            AMFID=${AMFID//\"/}
+            echo "$ADDRESS $AMFID" >> amf_id.txt
             AMF_C=$(expr $AMF_C + 1)
             ;;
         SMF)
@@ -109,19 +111,19 @@ echo ""
 function dis_check(){
 
 sed -i '1d' node.txt
-sed -i '1d' set_region.txt
+sed -i '1d' amf_id.txt
 echo -e "\033[36mDiscovery status:\033[0m"
 
 #AMF
 
 while read LINE2
 do
-    SET_X=$(echo $LINE2|cut -d '' -f 1)
-    REGION_X=$(echo $LINE2|cut -d ' ' -f 2)
-    ADDR_X=$(echo $LINE2|cut -d ' ' -f 3)
-    curl -s -X GET "http://$NRF_ADDR:80/nnrf-disc/v1/nf-instances?service-names=namf-evts&target-nf-type=AMF&requester-nf-type=AMF&amf-set-id=$SET_X&amf-region-id=$REGION_X" > amf.txt
-    n_ok "AMF $ADDR_X set id $SET_X, region id $REGION_X"
-done < set_region.txt
+    ADDR_X=$(echo $LINE2|cut -d ' ' -f 1)
+    ID_X=$(echo $LINE2|cut -d ' ' -f 2)
+    curl -s -X GET "http://$NRF_ADDR:80/nnrf-disc/v1/nf-instances?service-names=namf-comm&target-nf-type=AMF&requester-nf-type=SMF&requester-nf-instance-fqdn=njsmf02ber.er.pc.smf.5gc.mnc008.mcc460.3gppnetwork.org&guami=%7B%22plmnId%22%3A%7B%22mcc%22%3A%20%22460%22%2C%20%22mnc%22%3A%20%2208%22%7D%2c%20%22amfId%22%3A%20%22$ID_X%22%7D" > amf.txt
+    cat amf.txt | grep -i nfinstanceid > /dev/null
+    n_ok "AMF $ADDR_X amf id $ID_X"
+done < amf_id.txt
 
 #SMF
 curl -s -X GET "http://$NRF_ADDR:80/nnrf-disc/v1/nf-instances?service-names=nsmf-pdusession&target-nf-type=SMF&requester-nf-type=AMF&dnn=Internet" > smf.txt
@@ -130,20 +132,24 @@ SMF_T=$(cat smf.txt | grep -i nfInstanceId | wc -l)
 
 #AUSF
 curl -s -X GET "http://$NRF_ADDR:80/nnrf-disc/v1/nf-instances?target-nf-type=AUSF&service-names=nausf-auth&requester-nf-type=AMF&supi=imsi-$IMSI" > ausf.txt
+cat ausf.txt | grep -i nfinstanceid > /dev/null
 n_ok AUSF
 
 #UDM
 curl -s -X GET "http://$NRF_ADDR:80/nnrf-disc/v1/nf-instances?target-nf-type=UDM&service-names=nudm-sdm&requester-nf-type=AMF&supi=imsi-$IMSI" > udm.txt
+cat udm.txt | grep -i nfinstanceid > /dev/null
 n_ok UDM
 
 #PCF
 curl -s -X GET "http://$NRF_ADDR:80/nnrf-disc/v1/nf-instances?target-nf-type=PCF&service-names=npcf-am-policy-control&requester-nf-type=AMF&supi=imsi-$IMSI" > pcf.txt
+cat pcf.txt | grep -i nfinstanceid > /dev/null
 n_ok PCF
 
 #UDR
 curl -s -X GET "http://$NRF_ADDR:80/nnrf-disc/v1/nf-instances?target-nf-type=UDR&service-names=nudr-dr&requester-nf-type=UDM&supi=imsi-$IMSI" > udr.txt
 UDR_T=$(cat udr.txt | grep -i nfInstanceId | wc -l)
-[ $UDR_C == $UDR_T ]  && n_ok "ALL UDR" || n_ok "NOT ALL UDR"
+#[ $UDR_C == $UDR_T ]  && n_ok "ALL UDR" || n_ok "NOT ALL UDR"
+[ $UDR_T -gt 0 ]  && n_ok "ALL UDR" || n_ok "NOT ALL UDR"
 
 echo ""
 }
@@ -153,13 +159,17 @@ echo ""
 function scrib_data_check(){
 echo -e "\033[36mSubscription data:\033[0m "
 
-curl -m 5 -s -X GET "http://$UDM_ADDR:81/nudm-sdm/v1/imsi-$IMSI/am-data" > am-data.txt 
+curl -m 5 -s -X GET "http://$UDM_ADDR:81/nudm-sdm/v1/imsi-$IMSI/am-data" > am-data.txt
+grep -iE "[0-9]{11}" am-data.txt > /dev/null
 n_ok am-data
 curl -m 5 -s -X GET "http://$UDM_ADDR:81/nudm-sdm/v1/imsi-$IMSI/sm-data" > sm-data.txt
+grep -iE "SSC" sm-data.txt > /dev/null
 n_ok sm-data
 curl -m 5 -s -X GET "http://$UDM_ADDR:81/nudm-sdm/v1/imsi-$IMSI/nssai" > nssai.txt
+grep -iE "sst" nssai.txt > /dev/null
 n_ok nssai
 curl -m 5 -s -X GET "http://$UDM_ADDR:81/nudm-sdm/v1/imsi-$IMSI/smf-select-data" > smf-select-data.txt
+grep -i "DnnIndicator" smf-select-data.txt > /dev/null
 n_ok smf-select-data
 echo ""
 }
@@ -227,5 +237,9 @@ fi
 if [ $# == 0 ];then
     NRF_ADDR="10.10.2.34"
     IMSI="460070000000003"
+    echo "user 460070000000003"
     main
 fi
+
+
+
