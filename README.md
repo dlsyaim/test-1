@@ -13,8 +13,8 @@ frp config sample.
 4. Tieba: Baidu tieba BBS automatic sign.  
 5. Udmck: UDM nodes and date check.  
 
-# 4.Random_lottery
-Generate random lottery numbers.
-
-# 5.Log_move.py
+# 4.Log_move.py
 Move logs to a time-named folder.
+
+# 5.Random_lottery
+Generate random lottery numbers.
