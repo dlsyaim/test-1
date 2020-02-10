@@ -122,34 +122,34 @@ do
     ID_X=$(echo $LINE2|cut -d ' ' -f 2)
     curl -s -X GET "http://$NRF_ADDR:80/nnrf-disc/v1/nf-instances?service-names=namf-comm&target-nf-type=AMF&requester-nf-type=SMF&requester-nf-instance-fqdn=njsmf02ber.er.pc.smf.5gc.mnc008.mcc460.3gppnetwork.org&guami=%7B%22plmnId%22%3A%7B%22mcc%22%3A%20%22460%22%2C%20%22mnc%22%3A%20%2208%22%7D%2c%20%22amfId%22%3A%20%22$ID_X%22%7D" > amf.txt
     cat amf.txt | grep -i nfinstanceid > /dev/null
-    n_ok "AMF $ADDR_X amf id $ID_X"
+    n_ok "AMF $ADDR_X amf id $ID_X is"
 done < amf_id.txt
 
 #SMF
 curl -s -X GET "http://$NRF_ADDR:80/nnrf-disc/v1/nf-instances?service-names=nsmf-pdusession&target-nf-type=SMF&requester-nf-type=AMF&dnn=Internet" > smf.txt
 SMF_T=$(cat smf.txt | grep -i nfInstanceId | wc -l)
-[ $SMF_C == $SMF_T ]  && n_ok "ALL SMF" || n_ok "NOT ALL SMF"
+[ $SMF_C == $SMF_T ]  && n_ok "All SMFs are" || n_ok "Not all SMFs are"
 
 #AUSF
 curl -s -X GET "http://$NRF_ADDR:80/nnrf-disc/v1/nf-instances?target-nf-type=AUSF&service-names=nausf-auth&requester-nf-type=AMF&supi=imsi-$IMSI" > ausf.txt
 cat ausf.txt | grep -i nfinstanceid > /dev/null
-n_ok AUSF
+n_ok "AUSF is"
 
 #UDM
 curl -s -X GET "http://$NRF_ADDR:80/nnrf-disc/v1/nf-instances?target-nf-type=UDM&service-names=nudm-sdm&requester-nf-type=AMF&supi=imsi-$IMSI" > udm.txt
 cat udm.txt | grep -i nfinstanceid > /dev/null
-n_ok UDM
+n_ok "UDM is"
 
 #PCF
 curl -s -X GET "http://$NRF_ADDR:80/nnrf-disc/v1/nf-instances?target-nf-type=PCF&service-names=npcf-am-policy-control&requester-nf-type=AMF&supi=imsi-$IMSI" > pcf.txt
 cat pcf.txt | grep -i nfinstanceid > /dev/null
-n_ok PCF
+n_ok "PCF is"
 
 #UDR
 curl -s -X GET "http://$NRF_ADDR:80/nnrf-disc/v1/nf-instances?target-nf-type=UDR&service-names=nudr-dr&requester-nf-type=UDM&supi=imsi-$IMSI" > udr.txt
 UDR_T=$(cat udr.txt | grep -i nfInstanceId | wc -l)
 #[ $UDR_C == $UDR_T ]  && n_ok "ALL UDR" || n_ok "NOT ALL UDR"
-[ $UDR_T -gt 0 ]  && n_ok "ALL UDR" || n_ok "NOT ALL UDR"
+[ $UDR_T -gt 0 ]  && n_ok "All UDRs are" || n_ok "NOT ALL UDRs are"
 
 echo ""
 }
@@ -157,29 +157,29 @@ echo ""
 
 #Define func subscription data check
 function scrib_data_check(){
-echo -e "\033[36mSubscription data:\033[0m "
+echo -e "\033[36mSubscription data of $IMSI:\033[0m "
 
 curl -m 5 -s -X GET "http://$UDM_ADDR:81/nudm-sdm/v1/imsi-$IMSI/am-data" > am-data.txt
 grep -iE "[0-9]{11}" am-data.txt > /dev/null
-n_ok am-data
+n_ok "am-data is"
 curl -m 5 -s -X GET "http://$UDM_ADDR:81/nudm-sdm/v1/imsi-$IMSI/sm-data" > sm-data.txt
 grep -iE "SSC" sm-data.txt > /dev/null
-n_ok sm-data
+n_ok "sm-data is"
 curl -m 5 -s -X GET "http://$UDM_ADDR:81/nudm-sdm/v1/imsi-$IMSI/nssai" > nssai.txt
 grep -iE "sst" nssai.txt > /dev/null
-n_ok nssai
+n_ok "nssai is"
 curl -m 5 -s -X GET "http://$UDM_ADDR:81/nudm-sdm/v1/imsi-$IMSI/smf-select-data" > smf-select-data.txt
 grep -i "DnnIndicator" smf-select-data.txt > /dev/null
-n_ok smf-select-data
+n_ok "smf-select-data is"
 echo ""
 }
 
 #print ok or nok
 function n_ok(){
 if [[ $? == 0 ]];then
-    echo $1 is OK
+    echo $1 OK
 else
-    echo -e "\033[7m$1 is NOK\033[0m"
+    echo -e "\033[7m$1 NOK\033[0m"
 fi
 }
 
@@ -188,7 +188,7 @@ function auth_check(){
 SUCI="suci-0-${IMSI:0:3}-${IMSI:3:2}-0000-0-0-${IMSI:5}"
 curl -m 5 -s -X POST "http://$UDM_ADDR/nausf-auth/v1/ue-authentications" -H "accept: application/3gppHal+json" -H "Content-Type: application/json" -d "{ \"supiOrSuci\": \"$SUCI\", \"servingNetworkName\": \"5G:mnc008.mcc460.3gppnetwork.org\"}" > auth.txt
 cat auth.txt | grep -i 5G_AKA > /dev/null
-n_ok "Authen data"
+n_ok "Authen data is"
 echo ""
 
 }
@@ -214,7 +214,7 @@ if [ $# == 2 ];then
         if [[ $1 =~ $REGX  ]];then
             IMSI=$2
             NRF_ADDR=$1
-            echo "user $IMSI, NRF $NRF_ADDR"
+            echo "User $IMSI, NRF $NRF_ADDR"
             main
         else
             echo "Address is not regular address"
@@ -236,9 +236,16 @@ fi
 
 
 if [ $# == 0 ];then
+    echo "
+Usage: ./showins.sh NRF_IP IMSI
+Example: ./showins.sh 10.10.2.34 460070000000003
+Default NRF 10.10.2.34, user 460070000000003
+
+Alternative usage: ./showins.sh Instance-id
+Example: ./showins.sh 1709519d-d124-479a-8ed7-121b0006f86a
+"
     NRF_ADDR="10.10.2.34"
     IMSI="460070000000003"
-    echo "user 460070000000003"
     main
 fi
 
