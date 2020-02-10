@@ -12,7 +12,7 @@ frp config sample.
 3. Simpledictionary: Simple dictionary.  
 4. Tieba: Baidu tieba BBS automatic sign.  
 5. Udmck: UDM nodes and date check.  
-6. dlwbpics: Download weibo album.
+6. Dlwbpics: Download weibo album.
 
 # 4.Log_move.py
 Move logs to a time-named folder.
