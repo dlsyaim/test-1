@@ -214,6 +214,7 @@ if [ $# == 2 ];then
         if [[ $1 =~ $REGX  ]];then
             IMSI=$2
             NRF_ADDR=$1
+            echo "user $IMSI, NRF $NRF_ADDR"
             main
         else
             echo "Address is not regular address"
