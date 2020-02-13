@@ -1,7 +1,7 @@
 # Test project
 
 # 1.Autowifi
-Automatic login and authentication cisco wifi website.
+Automatic login and authentication cisco WIFI program for Raspberry pi.
 
 # 2.remote
 frp config sample.
