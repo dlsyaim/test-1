@@ -5,7 +5,7 @@ Welcome, this is Wudawei's testing project repo.
 # 1.Autowifi
 Automatic login and authentication script for Cisco wifi website.
 
-# 2.remote
+# 2.Remote
 Reverse proxy software FRP configuration sample.
 
 # 3.Spider: HTTP based program
